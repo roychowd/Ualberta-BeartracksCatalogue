@@ -3,12 +3,13 @@
         "persistent": false,
         "scripts": [ "background.js" ]
     },
-    "name": "ualbertaTest",
+    "name": "ualbertaCourseCatologue",
     "version": "1.0",
     "content_scripts": [ {
       "js": [ "content.js" ],
       "matches": [ "https://www.beartracks.ualberta.ca/psp/uahebprd/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES*" ]
    } ],
    "description": "View the course catologue directly within Ualberta BearTracks!",
-    "manifest_version": 2
+   "permissions": [ "https://catalogue.ualberta.ca/Course/*" ],
+   "manifest_version": 2
 }
