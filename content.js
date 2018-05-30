@@ -108,32 +108,32 @@ class Course {
 function grabCourseName(frameDoc) {
     // rerpresents the constant portion of the id for the div tag
     var coursesArray = [];
-    chrome.runtime.sendMessage("IDK");
     const globalClass = "SSR_CLSRSLT_WRK_GROUPBOX2$";
     var idx = 0;
     var id = globalClass +idx;
     var classNameParent = frameDoc.getElementById(id).innerHTML;
     while (classNameParent != null)
     {
+        chrome.runtime.sendMessage(classNameParent);
         var courseName = classNameParent.slice(classNameParent.indexOf('alt="Collapse section'), classNameParent.indexOf(" -"));
-        var x = courseName.split(" ")
+        let x = courseName.split(" ")
+        chrome.runtime.sendMessage(x.length);
+        let sd = x[2] + " "+ x[4];
+        chrome.runtime.sendMessage(sd);
         
-        if (x.length == 5) {
-            var concatenatedName = x[2] + " " + x[4];
-            var course = new Course(x[2], x[4], " ", concatenatedName);
-            coursesArray.push(course);
-            chrome.runtime.sendMessage(course.getName());
-            chrome.runtime.sendMessage(course.getNumber());
-            chrome.runtime.sendMessage(course.getDescription());
-            chrome.runtime.sendMessage(course.nameNumString());
-        }
+        // if (x.length == 5) {
+            
+        //     coursesArray[idx] = new Course(x[2], x[4], " ",  '');
+        //     chrome.runtime.sendMessage(coursesArray[idx].getName());
+        //     chrome.runtime.sendMessage(coursesArray[idx].getNumber());
+        //     chrome.runtime.sendMessage(coursesArray[idx].getDescription());
+        //     chrome.runtime.sendMessage(coursesArray[idx].nameNumString());
+        // }
 
-        else if (x.length == 6) {
-            var concatenatedName = x[3] + " " + x[5];
-            var course = new Course(x[3],x[5]," ", concatenatedName);
-            coursesArray.push(course);
+        // else if (x.length == 6) {
+        //     coursesArray[idx] = new Course(x[3],x[5]," ", x[3] + " " + x[5]);
 
-        }
+        // }
         id = globalClass + (++idx);
         classNameParent = frameDoc.getElementById(id).innerHTML;
     }
