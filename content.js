@@ -1,7 +1,6 @@
 
 
 window.onload = function () {
-
 	// flag for knowing what way to implement results
 	var count = 0;
 	/*
@@ -79,81 +78,64 @@ window.onload = function () {
 	}, 1000);
 };
 
-
-class Course {
-    constructor(name, number, description, nameNumString){
-        this.name = name;
-        this.number = number;
-        this.description = description;
-        this.nameNumString = nameNumString;
-    }
-
-    getName() {
-        return this.name;
-    }
-
-    getNameNumString() {
-        return this.nameNumString;
-    }
-
-    getNumber() {
-        return this.number;
-    }
-
-    getDescription() {
-        return this.description;
-    }
-}
-
 function grabCourseName(frameDoc) {
     // rerpresents the constant portion of the id for the div tag
-    var coursesArray = [];
-    const globalClass = "SSR_CLSRSLT_WRK_GROUPBOX2$";
+    var nameNum = {}; // a hashtable of course name and their respective number
+    var coursesArray = []; // may not need this will come back to it later
+    const globalClass = "SSR_CLSRSLT_WRK_GROUPBOX2$"; // this portion of the  dom remains constant!
     var idx = 0;
     var id = globalClass +idx;
     var classNameParent = frameDoc.getElementById(id).innerHTML;
-    while (classNameParent != null)
+   while(classNameParent != null)
     {
-        chrome.runtime.sendMessage(classNameParent);
         var courseName = classNameParent.slice(classNameParent.indexOf('alt="Collapse section'), classNameParent.indexOf(" -"));
-        let x = courseName.split(" ")
-        chrome.runtime.sendMessage(x.length);
-        let sd = x[2] + " "+ x[4];
-        chrome.runtime.sendMessage(sd);
+        var x = courseName.split(" ");
+        if (x.length == 5) {
+            var name = x[2]; 
+            var num = x[4];
+            var fullName = name + " " + num;
+            // coursesArray[idx] = fullName;
+            getCatologueURL(name, num);
+
+
+        }        
+        else if (x.length == 6) 
+        {
+            var name = x[2] + " " + x[3];
+            var num = x[4];
+            var fullName = name + " " + num;
+            getCatologueURL(name,num);
+
+        }
         
-        // if (x.length == 5) {
-            
-        //     coursesArray[idx] = new Course(x[2], x[4], " ",  '');
-        //     chrome.runtime.sendMessage(coursesArray[idx].getName());
-        //     chrome.runtime.sendMessage(coursesArray[idx].getNumber());
-        //     chrome.runtime.sendMessage(coursesArray[idx].getDescription());
-        //     chrome.runtime.sendMessage(coursesArray[idx].nameNumString());
-        // }
-
-        // else if (x.length == 6) {
-        //     coursesArray[idx] = new Course(x[3],x[5]," ", x[3] + " " + x[5]);
-
-        // }
         id = globalClass + (++idx);
         classNameParent = frameDoc.getElementById(id).innerHTML;
+
+    }    
+}
+
+function getURL(className,classNum) 
+{
+    //first check if the course name is either one whole word or contains a whitespace 
+    if (!hasWhiteSpace(className))
+    {
+        chrome.runtime.sendMessage("contains no whitespace");
     }
 
-    if (coursesArray.length != 0) {
-        chrome.runtime.sendMessage(coursesArray.length);
-        for (var i = 0; i < coursesArray.length; i++) {
-            chrome.runtime.sendMessage(coursesArray[i].getName());
-            chrome.runtime.sendMessage(coursesArray[i].getNumber());
-            chrome.runtime.sendMessage(coursesArray[i].getDescription());
-            chrome.runtime.sendMessage(coursesArray[i].nameNumString());
-        }
-    }
     else {
-        chrome.runtime.sendMessage("its 0");
+        chrome.runtime.sendMessage("contains whitespacce")
     }
 
-    
+
+
+
 
 
 }
 
+
+function hasWhiteSpace(string)
+{
+    return string.indexOf(' ') >= 0;
+}
 
