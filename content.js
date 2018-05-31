@@ -86,25 +86,26 @@ function grabCourseName(frameDoc) {
     var idx = 0;
     var id = globalClass +idx;
     var classNameParent = frameDoc.getElementById(id).innerHTML;
-   while(classNameParent != null)
+    while(classNameParent != null)
     {
         var courseName = classNameParent.slice(classNameParent.indexOf('alt="Collapse section'), classNameParent.indexOf(" -"));
         var x = courseName.split(" ");
         if (x.length == 5) {
             var name = x[2]; 
             var num = x[4];
+            
             var fullName = name + " " + num;
-            // coursesArray[idx] = fullName;
+           
             getCatologueURL(name, num);
 
-
-        }        
+        }
         else if (x.length == 6) 
         {
-            var name = x[2] + " " + x[3];
+            var name = x[2] + "%20" + x[3];
             var num = x[4];
             var fullName = name + " " + num;
-            getCatologueURL(name,num);
+            
+           getCatologueURL(name,num);
 
         }
         
@@ -114,23 +115,40 @@ function grabCourseName(frameDoc) {
     }    
 }
 
-function getURL(className,classNum) 
+function getCatologueURL(className,classNum) 
 {
     //first check if the course name is either one whole word or contains a whitespace 
+    chrome.runtime.sendMessage(className);
     if (!hasWhiteSpace(className))
     {
+        // regular url
         chrome.runtime.sendMessage("contains no whitespace");
+
+        var url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className +"&catalog=" + classNum;
+        chrome.runtime.sendMessage(
+            {
+                extra:"GETURL",
+                URL: url,
+                method: "GET",
+            }, function (response) {
+                chrome.runtime.sendMessage(response);
+
+            });
+
+
+        return;
     }
 
     else {
-        chrome.runtime.sendMessage("contains whitespacce")
+        // need to change4
+        var url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className + "&catalog=" + classNum;
+
+
+
+
+        chrome.runtime.sendMessage("contains whitespacce");
+        return;
     }
-
-
-
-
-
-
 }
 
 
