@@ -102,7 +102,7 @@ function grabCourseName(frameDoc) {
         else if (x.length == 6) 
         {
             var name = x[2] + "%20" + x[3];
-            var num = x[4];
+            var num = x[5];
             var fullName = name + " " + num;
             
            getCatologueURL(name,num);
@@ -118,37 +118,43 @@ function grabCourseName(frameDoc) {
 function getCatologueURL(className,classNum) 
 {
     //first check if the course name is either one whole word or contains a whitespace 
-    chrome.runtime.sendMessage(className);
+    //chrome.runtime.sendMessage(className);
+    var url;
     if (!hasWhiteSpace(className))
     {
         // regular url
-        chrome.runtime.sendMessage("contains no whitespace");
-
-        var url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className +"&catalog=" + classNum;
-        chrome.runtime.sendMessage(
-            {
-                extra:"GETURL",
-                URL: url,
-                method: "GET",
-            }, function (response) {
-                chrome.runtime.sendMessage(response);
-
-            });
-
-
-        return;
+        //chrome.runtime.sendMessage("contains no whitespace");
+        url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className +"&catalog=" + classNum;
     }
 
-    else {
-        // need to change4
-        var url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className + "&catalog=" + classNum;
+    // else 
+    // {
+    //     // need to change4
+    //     var arr = className.split(" ");
+
+    //     url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + arr[0] + "%20" + arr[1] + "&catalog=" + classNum;
+    //    //chrome.runtime.sendMessage("contains whitespacce");
+    // }
+
+    chrome.runtime.sendMessage(
+        {
+            extra:"GETURL",
+            URL: url,
+            method: "GET",
+        }, function (response) {
+
+            // create a dummy div element and retrieve the course description and course 
+            var dummyElement = document.createElement("div");
+            dummyElement.innerHTML = response;
 
 
+            var course = dummyElement.getElementsByClassName("info-panel")[0].children[0].innerHTML;
+            var courseDescription = dummyElement.getElementsByClassName("info-panel")[0].children[1].innerHTML;
 
-
-        chrome.runtime.sendMessage("contains whitespacce");
-        return;
-    }
+            chrome.runtime.sendMessage(dummyElement.getElementsByClassName("info-panel")[0].children[0].innerHTML);
+            chrome.runtime.sendMessage(dummyElement.getElementsByClassName("info-panel")[0].children[1].innerHTML);
+            
+        });
 }
 
 
