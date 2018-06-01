@@ -96,7 +96,7 @@ function grabCourseName(frameDoc) {
             
             var fullName = name + " " + num;
            
-            getCatologueURL(name, num);
+            getCatologueURL(frameDoc,name, num,idx,id);
 
         }
         else if (x.length == 6) 
@@ -105,7 +105,7 @@ function grabCourseName(frameDoc) {
             var num = x[5];
             var fullName = name + " " + num;
             
-           getCatologueURL(name,num);
+           getCatologueURL(frameDoc,name,num,idx,id,url);
 
         }
         
@@ -115,27 +115,12 @@ function grabCourseName(frameDoc) {
     }    
 }
 
-function getCatologueURL(className,classNum) 
+function getCatologueURL(frameDoc,className,classNum,index,id) 
 {
     //first check if the course name is either one whole word or contains a whitespace 
     //chrome.runtime.sendMessage(className);
-    var url;
-    if (!hasWhiteSpace(className))
-    {
-        // regular url
-        //chrome.runtime.sendMessage("contains no whitespace");
-        url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className +"&catalog=" + classNum;
-    }
-
-    // else 
-    // {
-    //     // need to change4
-    //     var arr = className.split(" ");
-
-    //     url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + arr[0] + "%20" + arr[1] + "&catalog=" + classNum;
-    //    //chrome.runtime.sendMessage("contains whitespacce");
-    // }
-
+    
+    var url = "https://catalogue.ualberta.ca/Course/Details?subjectCode=" + className +"&catalog=" + classNum;
     chrome.runtime.sendMessage(
         {
             extra:"GETURL",
@@ -146,20 +131,47 @@ function getCatologueURL(className,classNum)
             // create a dummy div element and retrieve the course description and course 
             var dummyElement = document.createElement("div");
             dummyElement.innerHTML = response;
-
-
             var course = dummyElement.getElementsByClassName("info-panel")[0].children[0].innerHTML;
             var courseDescription = dummyElement.getElementsByClassName("info-panel")[0].children[1].innerHTML;
-
-            chrome.runtime.sendMessage(dummyElement.getElementsByClassName("info-panel")[0].children[0].innerHTML);
-            chrome.runtime.sendMessage(dummyElement.getElementsByClassName("info-panel")[0].children[1].innerHTML);
-            
+            putDescription(frameDoc,course,courseDescription,index,id,url);
         });
 }
 
 
-function hasWhiteSpace(string)
-{
-    return string.indexOf(' ') >= 0;
-}
+function putDescription(frameDoc, course, courseDescription, index,id,url) {
 
+    var newDiv = document.createElement("div");
+    var popup = '';
+    newDiv.innerHTML = popup;
+    var e = frameDoc.getElementById(id);
+    e.appendChild(newDiv)
+    e.addEventListener("mouseover", function() {
+
+        newDiv.style.display = 'block';
+        newDiv.innerHTML = '<div id="popup"><h1>' + course +'</h1><p class="description">' + courseDescription + '</p></div>'//<div><span><a href = "' + url + '">Click here to view</a></span></div>'
+        newDiv.style.backgroundColor = 'white';
+        newDiv.style.borderWidth = "medium"
+        newDiv.style.borderColor = "#00431b";
+        newDiv.style.borderStyle = "solid";
+        newDiv.style.color = "#00431b";
+        newDiv.style.position = "absolute";
+        newDiv.style.width = "300px";
+        newDiv.style.minHeight = "310px";
+        newDiv.style.paddingLeft = "5px"
+        newDiv.style.paddingRight = "5px"
+
+	    });
+	    e.addEventListener("mouseout", function() {
+	    	
+					newDiv.style.display = 'none';
+	    });
+
+        newDiv.addEventListener("mouseover", function() {
+	    	newDiv.style.display = 'block';
+	    });
+
+	    newDiv.addEventListener("mouseout", function() {
+	    	newDiv.style.display = 'none';
+	    });
+
+}
