@@ -80,8 +80,6 @@ window.onload = function () {
 
 function grabCourseName(frameDoc) {
     // rerpresents the constant portion of the id for the div tag
-    var nameNum = {}; // a hashtable of course name and their respective number
-    var coursesArray = []; // may not need this will come back to it later
     const globalClass = "SSR_CLSRSLT_WRK_GROUPBOX2$"; // this portion of the  dom remains constant!
     var idx = 0;
     var id = globalClass +idx;
@@ -105,7 +103,7 @@ function grabCourseName(frameDoc) {
             var num = x[5];
             var fullName = name + " " + num;
             
-           getCatologueURL(frameDoc,name,num,idx,id,url);
+           getCatologueURL(frameDoc,name,num,idx,id);
 
         }
         
@@ -133,6 +131,7 @@ function getCatologueURL(frameDoc,className,classNum,index,id)
             dummyElement.innerHTML = response;
             var course = dummyElement.getElementsByClassName("info-panel")[0].children[0].innerHTML;
             var courseDescription = dummyElement.getElementsByClassName("info-panel")[0].children[1].innerHTML;
+            chrome.runtime.sendMessage(courseDescription);
             putDescription(frameDoc,course,courseDescription,index,id,url);
         });
 }
@@ -148,7 +147,8 @@ function putDescription(frameDoc, course, courseDescription, index,id,url) {
     e.addEventListener("mouseover", function() {
 
         newDiv.style.display = 'block';
-        newDiv.innerHTML = '<div id="popup"><h1>' + course +'</h1><p class="description">' + courseDescription + '</p></div>'//<div><span><a href = "' + url + '">Click here to view</a></span></div>'
+        newDiv.innerHTML = '<div id="popup"><h1 align="center">' + course +'</h1><p class="description" align="center">' + courseDescription + '</p></div>'//<div><span><a href = "' + url + '">Click here to view</a></span></div>'
+        
         newDiv.style.backgroundColor = 'white';
         newDiv.style.borderWidth = "medium"
         newDiv.style.borderColor = "#00431b";
@@ -157,13 +157,12 @@ function putDescription(frameDoc, course, courseDescription, index,id,url) {
         newDiv.style.position = "absolute";
         newDiv.style.width = "300px";
         newDiv.style.minHeight = "310px";
-        newDiv.style.paddingLeft = "5px"
-        newDiv.style.paddingRight = "5px"
+        newDiv.style.paddingLeft = "20px"
+        newDiv.style.paddingRight = "20px"
 
 	    });
 	    e.addEventListener("mouseout", function() {
-	    	
-					newDiv.style.display = 'none';
+            newDiv.style.display = 'none';
 	    });
 
         newDiv.addEventListener("mouseover", function() {

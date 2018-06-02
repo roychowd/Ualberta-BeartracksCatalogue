@@ -3,13 +3,17 @@
         "persistent": false,
         "scripts": [ "background.js" ]
     },
-    "name": "ualbertaCourseCatologue",
+    "name": "ualbertaCatologuer",
     "version": "1.0",
+
+    "icons" : {
+        "128":"icons/icon128.png"
+    },
     "content_scripts": [ {
       "js": [ "content.js" ],
       "matches": [ "https://www.beartracks.ualberta.ca/psp/uahebprd/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES*" ]
    } ],
-   "description": "View the course catologue directly within Ualberta BearTracks!",
+   "description": "View the course catologue directly within the University of Alberta Class Enrolment Pages!",
    "permissions": [ "https://catalogue.ualberta.ca/Course/*" ],
    "manifest_version": 2
 }
