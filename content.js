@@ -5,8 +5,7 @@ window.onload = function () {
 	var count = 0;
 	/*
 	Interval every second to make sure to grab the dom of the page. Dom changes a lot, and sometimes it does not modify
-	the dom itself, but changes the whole page without changing of the url. So couldnt get MutationObserver to work.
-	If more time, figure out how to work it correctly.  
+	the dom itself, but changes the whole page without changing of the url.
 	*/
 	setInterval(function(){
 
@@ -28,15 +27,13 @@ window.onload = function () {
 
 				try{
 					/*
-					remove that element so that it knows to stop implementing results, otherwise
-					will go on forever
+					remove that element so that it knows to stop implementing results
 					*/
 
 					element.parentNode.removeChild(element);
                     count = 1;
                     grabCourseName(frameDoc);
 
-					//grabProfNames(frameDoc);
 				}
 
 				catch(TypeError){
@@ -46,7 +43,6 @@ window.onload = function () {
 			else{
                 count = 1;
                 grabCourseName(frameDoc);
-				//grabProfNames(frameDoc);
 			}	
 		}
 
@@ -60,7 +56,6 @@ window.onload = function () {
 
                 element.parentNode.removeChild(element);
                 grabCourseName(frameDoc);
-				//grabProfNames(frameDoc);
 			}
 
 			catch(TypeError){
